@@ -1,0 +1,18 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "RO App Public API",
+  "description": "REST API v2 for RO App, a business management platform for repair and service businesses: orders, estimates, bookings, inquiries (leads), contacts, catalog (products, services, bundles), invoices, sales, finance, work schedules, telephony and webhooks.",
+  "folders": ["docs"],
+  "excludeFolders": ["scripts", "spec", ".cache"],
+  "excludeFiles": [],
+  "rules": [
+    "Use the base URL https://api.roapp.io/v2 and send the API key as 'Authorization: Bearer <API_KEY>' on every request; never hardcode the key, read it from an environment variable.",
+    "Respect the rate limit of 3 requests per second and retry 429 Too Many Requests responses with backoff.",
+    "List endpoints are paginated with the 'page' query parameter (up to 50 entries per page); 'count' in the response is the total number of records, so iterate pages until all records are fetched.",
+    "Responses are wrapped in an envelope: read records from 'data' (array for lists, object for single entities) and the total from 'count'.",
+    "Date-time range filters (created_at, modified_at, closed_at, scheduled_for, due_date, issue_date) take one ISO 8601 value (lower bound) or two values (from, to); repeat the query key for each array value.",
+    "Type, status, location (branch), employee, tax and custom field IDs are company-specific: look them up via the corresponding endpoints (e.g. /orders/types, /orders/statuses, /company/locations, /company/employees) instead of hardcoding them.",
+    "Send custom_fields as a JSON-encoded string keyed by 'f<field_id>', e.g. \"{\\\"f123\\\": \\\"value\\\"}\"; get field IDs from the /custom-fields endpoints.",
+    "Webhooks are configured in the RO App UI (Settings > API), not via the API; respond 2XX quickly, deduplicate by payload id and verify the X-Signature HMAC-SHA256 header."
+  ]
+}
